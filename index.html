@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Villa HoMar - Guide de la Maison</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- PDF Generation Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <style>
+        /* --- Base & Dark Mode Variables --- */
+        :root {
+            --bg-color: #0a0a0a;
+            --card-bg-color: rgba(31, 41, 55, 0.5);
+            --border-color: rgba(75, 85, 99, 0.5);
+            --primary-color: #34d399;
+            --primary-hover-color: #059669;
+            --text-color: #e5e7eb;
+            --text-muted-color: #9ca3af;
+            --text-strong-color: #ffffff;
+            --header-bg: linear-gradient(135deg, rgba(17, 24, 39, 0.8) 0%, rgba(0,0,0,0.9) 100%), url('https://placehold.co/1920x1080/0a0a0a/1f2937?text=Villa+HoMar') no-repeat center center/cover;
+            --footer-border-color: #1f2937; /* Corresponds to gray-800 */
+            
+            /* Colored text */
+            --cyan-text: #22d3ee;
+            --amber-text: #f59e0b;
+            --red-text: #ef4444;
+            --blue-link-text: #5c97f7;
+        }
+
+        /* --- Light Mode Variables --- */
+        html.light {
+            --bg-color: #f3f4f6;
+            --card-bg-color: #ffffff;
+            --border-color: #e5e7eb;
+            --primary-color: #10b981;
+            --primary-hover-color: #047857;
+            --text-color: #1f2937;
+            --text-muted-color: #6b7280;
+            --text-strong-color: #000000;
+            --header-bg: linear-gradient(135deg, rgba(229, 231, 235, 0.8) 0%, rgba(209, 213, 219, 0.9) 100%), url('https://placehold.co/1920x1080/f3f4f6/e5e7eb?text=Villa+HoMar') no-repeat center center/cover;
+            --footer-border-color: #e5e7eb; /* Corresponds to gray-200 */
+
+            /* Darker colored text for light mode */
+            --cyan-text: #0891b2;
+            --amber-text: #b45309;
+            --red-text: #b91c1c;
+            --blue-link-text: #2563eb;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .main-header {
+            background: var(--header-bg);
+            background-attachment: fixed;
+        }
+        .card {
+            background-color: var(--card-bg-color);
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            border-color: rgba(52, 211, 153, 0.7);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+        .icon { color: var(--primary-color); }
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: #000;
+            transition: background-color 0.3s ease;
+        }
+        .btn-primary:hover { background-color: var(--primary-hover-color); }
+        .btn-secondary {
+            background-color: var(--card-bg-color);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+        .btn-secondary:hover { border-color: var(--primary-color); }
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out, padding-top 0.5s ease-in-out;
+            padding-top: 0;
+        }
+        .accordion-button .accordion-arrow { transition: transform 0.3s ease; }
+        .accordion-button.open .accordion-arrow { transform: rotate(180deg); }
+        
+        /* Custom color classes using variables */
+        .text-cyan-accent { color: var(--cyan-text); }
+        .text-amber-accent { color: var(--amber-text); }
+        .text-red-accent { color: var(--red-text); }
+        .text-blue-link { color: var(--blue-link-text); }
+        .text-strong { color: var(--text-strong-color); }
+        .text-muted { color: var(--text-muted-color); }
+        .footer-border { border-color: var(--footer-border-color); }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Loading Overlay for PDF Generation -->
+    <div id="loading-overlay" class="fixed inset-0 bg-black bg-opacity-75 z-50 flex-col items-center justify-center hidden">
+        <div class="loader mb-4"></div>
+        <p class="text-white text-lg">Génération du PDF en cours...</p>
+    </div>
+
+    <!-- Header -->
+    <header class="main-header py-20 md:py-32 text-center">
+        <div class="container mx-auto px-6">
+            <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-4 text-strong">Bienvenue à la Villa HoMar</h1>
+            <p class="text-lg md:text-xl text-muted max-w-3xl mx-auto">Votre guide complet pour un séjour parfait. Retrouvez ici toutes les instructions et informations utiles.</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content" class="container mx-auto px-4 sm:px-6 py-12 md:py-16">
+        
+        <!-- Action Buttons -->
+        <div class="flex items-center justify-center space-x-4 mb-12">
+            <button id="generate-pdf-btn" class="btn-primary font-bold py-3 px-6 rounded-lg shadow-lg flex items-center justify-center">
+                <i class="ph-bold ph-download-simple text-2xl mr-2"></i>
+                Télécharger le Guide
+            </button>
+            <button id="theme-toggle-btn" class="btn-secondary p-3 rounded-lg shadow-lg flex items-center justify-center">
+                <i id="theme-sun-icon" class="ph-bold ph-sun text-2xl"></i>
+                <i id="theme-moon-icon" class="ph-bold ph-moon text-2xl"></i>
+            </button>
+        </div>
+
+        <!-- Grid of instructions -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+
+            <!-- Climatisation -->
+            <div class="card rounded-2xl p-6">
+                <div class="flex items-center mb-4">
+                    <i class="ph-bold ph-snowflake icon text-4xl mr-4"></i>
+                    <h2 class="text-2xl font-bold text-strong">Climatisation</h2>
+                </div>
+                <ul class="space-y-3 text-muted">
+                    <li><i class="ph-fill ph-arrow-fat-lines-up-down inline-block mr-2 text-cyan-accent"></i>Utilisez les flèches pour régler la température. La température ambiante est en grand au centre, celle désirée en petit en haut à droite.</li>
+                    <li><i class="ph-fill ph-blinds inline-block mr-2 text-cyan-accent"></i>Gardez les volets fermés la journée. La clim refroidira le salon si une chambre est chaude, d'où l'intérêt de garder une température homogène.</li>
+                    <li><i class="ph-fill ph-thermometer-cold inline-block mr-2 text-cyan-accent"></i>S'il fait trop froid, augmentez la température désirée plutôt que d'éteindre.</li>
+                    <li class="font-bold text-amber-accent"><i class="ph-fill ph-warning-circle inline-block mr-2"></i>Ne pas éteindre les télécommandes signalées et ne pas toucher aux autres boutons.</li>
+                </ul>
+            </div>
+
+            <!-- Alarme Piscine -->
+            <div class="card rounded-2xl p-6">
+                <div class="flex items-center mb-4">
+                    <i class="ph-bold ph-swimming-pool icon text-4xl mr-4"></i>
+                    <h2 class="text-2xl font-bold text-strong">Alarme Piscine</h2>
+                </div>
+                <ul class="space-y-3 text-muted">
+                    <li><strong class="text-strong">Activation :</strong> Code <span class="font-mono text-lg text-cyan-accent">1-2-3-4</span>. Attendre le clignotement vert lent quelques minutes.</li>
+                    <li><strong class="text-strong">Désactivation :</strong> appuyer sur le 2ème bouton et composer <span class="font-mono text-lg text-cyan-accent">3-4-3-4-3-4</span>.</li>
+                </ul>
+            </div>
+
+            <!-- Lave-vaisselle -->
+            <div class="card rounded-2xl p-6">
+                <div class="flex items-center mb-4">
+                    <i class="ph-bold ph-plugs icon text-4xl mr-4"></i>
+                    <h2 class="text-2xl font-bold text-strong">Lave-vaisselle</h2>
+                </div>
+                <ol class="list-decimal list-inside space-y-2 text-muted">
+                    <li>Mettre le produit directement dans la cuve (la trappe de la caisette prévue pour mettre le produit ne s'ouvre pas pendant le cycle de lavage).</li>
+                    <li>Fermer la porte, appuyer sur "Arrêt".</li>
+                    <li>Choisir le programme.</li>
+                    <li>Appuyer sur "Marche" (à droite).</li>
+                    <li>À la fin, appuyer sur "Arrêt" (si besoin plusieurs fois) jusqu'à extinction du voyant rouge.</li>
+                </ol>
+            </div>
+
+            <!-- Barbecue -->
+            <div class="card rounded-2xl p-6">
+                <div class="flex items-center mb-4">
+                    <i class="ph-bold ph-fire icon text-4xl mr-4"></i>
+                    <h2 class="text-2xl font-bold text-strong">Barbecue</h2>
+                </div>
+                <p class="text-muted">
+                    <span class="font-bold text-red-accent">Ne jamais laisser le feu sans surveillance.</span> Risque d'incendie élevé (clôture inflammable). Vider le barbecue (cendres froides) avant votre départ.
+                </p>
+                <img src="https://www.pompiersdulot.fr/sites/default/files/styles/image_300_300/public/2021-06/37104015351_f5bd0ec41a_o.jpg?itok=pz8Bz5P0" alt="Prévention Feu" class="mt-4 rounded-lg mx-auto w-32" onerror="this.onerror=null;this.src='https://placehold.co/128x128/ff0000/ffffff?text=Image+Feu';">
+            </div>
+
+            <!-- TV & Streaming -->
+            <div class="card rounded-2xl p-6">
+                <div class="flex items-center mb-4">
+                    <i class="ph-bold ph-television-simple icon text-4xl mr-4"></i>
+                    <h2 class="text-2xl font-bold text-strong">TV & Streaming</h2>
+                </div>
+                <p class="text-muted mb-2">Via l'app <span class="font-bold">aller sur Molotov TV</span> : allez sur "en direct" (en naviguant vers la gauche), choisissez une chaîne et appuyez <span class="font-bold">deux fois sur OK</span>.</p>
+                <p class="text-muted">Pour vos abonnements (Netflix, etc.), touche "maisonnette", sélectionnez l'app et connectez-vous.</p>
+                <p class="mt-3 font-bold text-amber-accent"><i class="ph-fill ph-warning-circle inline-block mr-2"></i>N'oubliez pas de vous déconnecter de vos abonnements avant de partir !</p>
+                <img src="https://i.ibb.co/pvyBXxR6/Capture-d-e-cran-2025-07-07-a-17-34-33.png" alt="QR Code pour le WiFi" class="mt-4 rounded-lg bg-white p-2 mx-auto" onerror="this.style.display='none'">
+                <img src="https://i.postimg.cc/PqbZ5gDn/Capture-d-e-cran-2025-07-07-a-17-44-05.png" alt="QR Code pour le WiFi" class="mt-4 rounded-lg bg-white p-2 mx-auto" onerror="this.style.display='none'"> 
+                <div class="flex justify-center items-center space-x-4 mt-4">
+                </div>
+            </div>
+
+            <!-- Connexion WiFi -->
+            <div class="card rounded-2xl p-6">
+                <div class="flex items-center mb-4">
+                    <i class="ph-bold ph-wifi-high icon text-4xl mr-4"></i>
+                    <h2 class="text-2xl font-bold text-strong">Connexion WiFi</h2>
+                </div>
+                <div class="space-y-2 text-muted">
+                    <p>Réseau: <span class="font-semibold text-strong">villa-homar</span></p>
+                    <p>Mot de passe: <span class="font-semibold text-strong">Biscarrosse-40600.</span></p>
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=WIFI:T:WPA;S:villa-homar;P:Biscarrosse-40600.;;" alt="QR Code pour le WiFi" class="mt-4 rounded-lg bg-white p-2 mx-auto" onerror="this.onerror=null;this.src='https://placehold.co/150x150/ffffff/000000?text=QR+Code';">
+                    <p class="mt-2 font-bold text-red-accent">Ne jamais débrancher les box internet (indispensables pour la clim, l'arrosage, etc.).</p>
+                </div>
+            </div>
+
+            <!-- Enceintes -->
+            <div class="card rounded-2xl p-6">
+                <div class="flex items-center mb-4">
+                    <i class="ph-bold ph-speaker-high icon text-4xl mr-4"></i>
+                    <h2 class="text-2xl font-bold text-strong">Enceintes</h2>
+                </div>
+                <p class="text-muted">Appuyer sur le bouton "Marche" des enceintes et du caisson de basse. Sélectionner "FM" pour la radio. Ne pas oublier d'éteindre après usage.</p>
+            </div>
+
+            <!-- Panneaux Solaires -->
+            <div class="card rounded-2xl p-6">
+                <div class="flex items-center mb-4">
+                    <i class="ph-bold ph-solar-panel icon text-4xl mr-4"></i>
+                    <h2 class="text-2xl font-bold text-strong">Panneaux Solaires</h2>
+                </div>
+                <p class="text-muted">Profitez de la journée pour lancer lave-linge et lave-vaisselle. Quand l'ecran de consommation en temps réel indique <span class="font-mono text-lg text-cyan-accent">0</span>, l'énergie solaire prend le relais !</p>
+            </div>
+
+            <!-- Activités -->
+            <div class="card rounded-2xl p-6">
+                <div class="flex items-center mb-4">
+                    <i class="ph-bold ph-map-trifold icon text-4xl mr-4"></i>
+                    <h2 class="text-2xl font-bold text-strong">Activités</h2>
+                </div>
+                <p class="text-muted">Pour les activités vous pouvez visiter le site de l'office de tourisme <a href="https://www.biscagrandslacs.com/agenda-des-manifestations" target="_blank" rel="noopener noreferrer" class="font-bold text-blue-link hover:underline">à cette adresse</a>.</p>
+            </div>
+
+            <!-- Accordion Section -->
+            <div class="md:col-span-2 lg:col-span-3 space-y-4">
+                <!-- Infos Pratiques Accordion -->
+                <div class="card rounded-2xl">
+                    <button class="accordion-button w-full flex justify-between items-center p-6 text-left">
+                        <div class="flex items-center">
+                            <i class="ph-bold ph-info icon text-4xl mr-4"></i>
+                            <h2 class="text-2xl font-bold text-strong">Infos Pratiques et Préconisations</h2>
+                        </div>
+                        <i class="ph-bold ph-caret-down accordion-arrow text-3xl"></i>
+                    </button>
+                    <div class="accordion-content px-6 text-muted">
+                        <div class="pb-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <h3 class="font-bold text-lg text-strong mb-2">Poubelles</h3>
+                                <p>Sortir les containers le LUNDI et JEUDI matin.</p>
+                                <p>Point de tri (verre, carton, plastique) : à 700m, rue Georges Pompidou.</p>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg text-strong mb-2">Marchés Locaux</h3>
+                                <ul class="list-disc list-inside">
+                                    <li>Biscarrosse Ville : Vendredi matin & Dimanche matin.</li>
+                                    <li>Biscarrosse Plage : Tous les matins & marchés nocturnes.</li>
+                                    <li>Parentis-en-Born : Jeudi matin.</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg text-strong mb-2">Stationnement</h3>
+                                <ul class="list-disc list-inside">
+                                    <li>Gratuit dans la ville (hors zones spécifiques).</li>
+                                    <li>Payant : Abords du lac et plage des Viviers.</li>
+                                    <li>Zones bleues : 1h30 avec disque ou heure d'arrivée sur papier.</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg text-strong mb-2">Nuisances Sonores</h3>
+                                <ul class="list-disc list-inside">
+                                    <li>Lun-Ven : 8h-12h et 14h-19h30</li>
+                                    <li>Samedi : 9h-12h et 15h-19h</li>
+                                    <li>Dimanche & fériés : 10h-12h</li>
+                                </ul>
+                            </div>
+                             <div class="md:col-span-2">
+                                <h3 class="font-bold text-lg text-strong mb-2">Piscine & Entretien</h3>
+                                <p>Pensez à vous rincer les pieds avant de nager. Sébastien s'occupe de la piscine le vendredi soir. En cas d'absence, il a un bip pour entrer. Si l'eau devient trouble ou verte, contactez-le au <span class="font-semibold text-strong">06 68 02 64 83</span>.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Caution & Départ Accordion -->
+                <div class="card rounded-2xl">
+                    <button class="accordion-button w-full flex justify-between items-center p-6 text-left">
+                        <div class="flex items-center">
+                            <i class="ph-bold ph-key icon text-4xl mr-4"></i>
+                            <h2 class="text-2xl font-bold text-strong">Départ & Caution</h2>
+                        </div>
+                        <i class="ph-bold ph-caret-down accordion-arrow text-3xl"></i>
+                    </button>
+                    <div class="accordion-content px-6 text-muted">
+                        <div class="pb-6">
+                            <p class="mb-4">Une caution ménage de 200€ a été transmise à Elodie. Pour sa restitution intégrale, merci de respecter la checklist suivante :</p>
+                            <ul class="columns-1 sm:columns-2 list-disc list-inside space-y-2">
+                                <li>Literie et canapé sans taches/odeur</li>
+                                <li>Aspirateur passé</li>
+                                <li>Sol lavé</li>
+                                <li>Miroirs et vitres sans traces</li>
+                                <li>Appareils de cuisson propres</li>
+                                <li>Lave-vaisselle vidé et propre</li>
+                                <li>Sanitaires et siphons propres</li>
+                                <li>Frigo et congélateur propres</li>
+                                <li>Terrasse balayée (et lavée si besoin)</li>
+                                <li>Barbecue vidé et nettoyé</li>
+                                <li>Intérieur des meubles sans sable/cheveux</li>
+                                <li>Toutes les poubelles vidées</li>
+                            </ul>
+                            <p class="mt-4 text-amber-accent">En cas de perte de clés ou de bip, un devis de remplacement sera transmis via la plateforme de réservation.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center py-8 mt-12 border-t footer-border">
+        <p class="text-muted">Nous vous souhaitons un excellent séjour à la Villa HoMar !</p>
+    </footer>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- THEME SWITCHER LOGIC ---
+        const themeToggleButton = document.getElementById('theme-toggle-btn');
+        const sunIcon = document.getElementById('theme-sun-icon');
+        const moonIcon = document.getElementById('theme-moon-icon');
+        const htmlElement = document.documentElement;
+
+        // Function to update the theme and icon
+        const applyTheme = (theme) => {
+            if (theme === 'light') {
+                htmlElement.classList.add('light');
+                sunIcon.style.display = 'none';
+                moonIcon.style.display = 'block';
+            } else {
+                htmlElement.classList.remove('light');
+                sunIcon.style.display = 'block';
+                moonIcon.style.display = 'none';
+            }
+        };
+
+        // Check for saved theme in localStorage, otherwise check system preference
+        const savedTheme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        
+        if (savedTheme) {
+            applyTheme(savedTheme);
+        } else {
+            applyTheme(prefersDark ? 'dark' : 'light');
+        }
+
+        // Add click listener to the toggle button
+        themeToggleButton.addEventListener('click', () => {
+            const currentTheme = htmlElement.classList.contains('light') ? 'light' : 'dark';
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            localStorage.setItem('theme', newTheme);
+            applyTheme(newTheme);
+        });
+
+        // --- ACCORDION LOGIC ---
+        document.querySelectorAll('.accordion-button').forEach(button => {
+            button.addEventListener('click', () => {
+                const accordionContent = button.nextElementSibling;
+                button.classList.toggle('open');
+                if (button.classList.contains('open')) {
+                    accordionContent.style.maxHeight = accordionContent.scrollHeight + 'px';
+                    accordionContent.style.paddingTop = '1rem';
+                } else {
+                    accordionContent.style.maxHeight = '0';
+                    accordionContent.style.paddingTop = '0';
+                }
+            });
+        });
+
+        // --- PDF GENERATION LOGIC ---
+        document.getElementById('generate-pdf-btn').addEventListener('click', () => {
+            const { jsPDF } = window.jspdf;
+            const content = document.getElementById('main-content');
+            const loadingOverlay = document.getElementById('loading-overlay');
+            const actionButtons = document.querySelector('.flex.items-center.justify-center.space-x-4');
+            
+            loadingOverlay.style.display = 'flex';
+            actionButtons.style.visibility = 'hidden';
+
+            const accordions = document.querySelectorAll('.accordion-button');
+            const wereOpen = [];
+            accordions.forEach((button, index) => {
+                wereOpen[index] = button.classList.contains('open');
+                if (!wereOpen[index]) {
+                    button.click();
+                }
+            });
+
+            setTimeout(() => {
+                const isLightTheme = htmlElement.classList.contains('light');
+                html2canvas(content, { 
+                    scale: 2,
+                    backgroundColor: isLightTheme ? '#f3f4f6' : '#0a0a0a',
+                    useCORS: true 
+                }).then(canvas => {
+                    actionButtons.style.visibility = 'visible';
+                    loadingOverlay.style.display = 'none';
+
+                    accordions.forEach((button, index) => {
+                        if (!wereOpen[index]) {
+                           button.click();
+                        }
+                    });
+
+                    const imgData = canvas.toDataURL('image/png');
+                    const pdf = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
+                    const pdfWidth = pdf.internal.pageSize.getWidth();
+                    const pdfHeight = pdf.internal.pageSize.getHeight();
+                    const ratio = canvas.width / canvas.height;
+                    const imgWidth = pdfWidth - 20;
+                    const imgHeight = imgWidth / ratio;
+                    
+                    let heightLeft = imgHeight;
+                    let position = 15;
+
+                    pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+                    heightLeft -= (pdfHeight - 25);
+
+                    while (heightLeft > 0) {
+                        position = -heightLeft - 15;
+                        pdf.addPage();
+                        pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+                        heightLeft -= pdfHeight;
+                    }
+                    
+                    pdf.save('Guide-Villa-HoMar.pdf');
+                }).catch(err => {
+                    loadingOverlay.style.display = 'none';
+                    actionButtons.style.visibility = 'visible';
+                    console.error("Erreur lors de la génération du PDF:", err);
+                });
+            }, 600); // Increased delay for accordion animation
+        });
+    });
+    </script>
+
+</body>
+</html>
