@@ -73,6 +73,9 @@
         .main-header {
             background: var(--header-bg);
             background-attachment: fixed;
+            /* Increased padding for better spacing from pill */
+            padding-top: 10rem;
+            padding-bottom: 8rem;
         }
         .card {
             background-color: var(--card-bg-color);
@@ -130,30 +133,227 @@
         .text-muted { color: var(--text-muted-color); }
         .footer-border { border-color: var(--footer-border-color); }
         
-        /* Language Switcher Styles */
-        .lang-dropdown { position: relative; display: inline-block; }
+        /* Floating Action Pill Styles - COMPACT SIZE */
+        .floating-pill {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 50;
+            background: rgba(31, 41, 55, 0.85);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(75, 85, 99, 0.3);
+            border-radius: 9999px; /* Completely rounded */
+            padding: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            /* COMPACT: Width fits content exactly */
+            width: fit-content;
+        }
+        
+        html.light .floating-pill {
+            background: rgba(255, 255, 255, 0.85);
+            border: 1px solid rgba(229, 231, 235, 0.5);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        .floating-pill:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+        }
+        
+        html.light .floating-pill:hover {
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        /* PERFECT BUTTON DESIGN - All same size */
+        .pill-button {
+            background: transparent;
+            border: none;
+            color: var(--text-color);
+            padding: 0.75rem;
+            border-radius: 9999px; /* Completely rounded */
+            transition: all 0.2s ease;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px; /* Fixed width for consistency */
+            height: 48px; /* Fixed height for consistency */
+            flex-shrink: 0; /* Prevent shrinking */
+        }
+        
+        .pill-button:hover {
+            background: rgba(52, 211, 153, 0.2);
+            transform: scale(1.05);
+        }
+        
+        .pill-button.primary {
+            background: var(--primary-color);
+            color: #000;
+            font-weight: 600;
+            width: 96px; /* Exactly double the size of other buttons */
+            padding: 0.75rem 1rem;
+        }
+        
+        .pill-button.primary:hover {
+            background: var(--primary-hover-color);
+            transform: scale(1.02);
+        }
+        
+        /* Language Dropdown Styles - ENHANCED FROSTED GLASS */
+        .lang-dropdown { 
+            position: relative; 
+            display: inline-block; 
+        }
+        
         .lang-dropdown-content {
             display: none;
             position: absolute;
-            background-color: var(--card-bg-color);
-            border: 1px solid var(--border-color);
-            min-width: 100px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 10;
-            border-radius: 0.5rem;
-            overflow: hidden;
-            margin-top: 0.5rem;
+            top: 100%;
             right: 0;
+            margin-top: 0.75rem;
+            background: rgba(31, 41, 55, 0.95); /* More opaque for better readability */
+            backdrop-filter: blur(30px); /* Stronger blur */
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid rgba(75, 85, 99, 0.4);
+            border-radius: 1.5rem; /* More rounded */
+            min-width: 160px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4); /* Stronger shadow */
+            z-index: 60;
+            overflow: hidden;
+            animation: fadeInDown 0.2s ease-out;
         }
+        
+        html.light .lang-dropdown-content {
+            background: rgba(255, 255, 255, 0.95); /* More opaque for better readability */
+            border: 1px solid rgba(229, 231, 235, 0.6);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .lang-dropdown-content.show {
+            display: block;
+        }
+        
         .lang-dropdown-content a {
             color: var(--text-color);
-            padding: 12px 16px;
+            padding: 16px 20px;
             text-decoration: none;
-            display: block;
-            transition: background-color 0.2s ease;
+            display: flex;
+            align-items: center;
+            transition: all 0.2s ease;
+            font-size: 0.95rem;
+            font-weight: 500;
+            min-height: 48px;
+            background: rgba(0, 0, 0, 0.05); /* Subtle background for better contrast */
         }
-        .lang-dropdown-content a:hover { background-color: var(--primary-hover-color); }
-        .lang-dropdown:hover .lang-dropdown-content { display: block; }
+        
+        html.light .lang-dropdown-content a {
+            background: rgba(0, 0, 0, 0.02);
+        }
+        
+        .lang-dropdown-content a:hover { 
+            background: rgba(52, 211, 153, 0.25);
+            color: var(--text-strong-color);
+        }
+        
+        .lang-dropdown-content a:not(:last-child) {
+            border-bottom: 1px solid rgba(75, 85, 99, 0.2);
+        }
+        
+        html.light .lang-dropdown-content a:not(:last-child) {
+            border-bottom: 1px solid rgba(229, 231, 235, 0.3);
+        }
+        
+        /* Mobile Responsive Adjustments */
+        @media (max-width: 768px) {
+            .floating-pill {
+                top: 10px;
+                right: 10px;
+                left: 10px;
+                justify-content: center;
+                padding: 0.75rem;
+                gap: 0.75rem;
+                /* Mobile: Full width for better usability */
+                width: auto;
+            }
+            
+            .pill-button {
+                width: 48px;
+                height: 48px;
+                padding: 0.75rem;
+            }
+            
+            .pill-button.primary {
+                width: 96px; /* Still double size on mobile */
+                font-size: 0.9rem;
+            }
+            
+            .lang-dropdown-content {
+                right: 0;
+                left: auto;
+                min-width: 180px;
+                margin-top: 1rem;
+            }
+            
+            .lang-dropdown-content a {
+                padding: 18px 24px;
+                font-size: 1rem;
+                min-height: 52px;
+            }
+            
+            /* Adjust header padding for mobile */
+            .main-header {
+                padding-top: 7rem;
+                padding-bottom: 6rem;
+            }
+        }
+        
+        /* Extra small screens */
+        @media (max-width: 480px) {
+            .floating-pill {
+                padding: 0.5rem;
+                gap: 0.5rem;
+            }
+            
+            .pill-button {
+                width: 44px;
+                height: 44px;
+                padding: 0.625rem;
+            }
+            
+            .pill-button.primary {
+                width: 88px;
+                font-size: 0.875rem;
+            }
+            
+            .main-header {
+                padding-top: 6rem;
+                padding-bottom: 5rem;
+            }
+        }
+        
+        /* Better title positioning - INCREASED SPACING */
+        @media (min-width: 769px) {
+            .main-header {
+                padding-top: 12rem; /* Increased from 8rem to 12rem */
+                padding-bottom: 10rem; /* Increased from 8rem to 10rem */
+            }
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -164,8 +364,31 @@
         <p class="text-white text-lg" data-lang-key="loading_pdf">Génération du PDF en cours...</p>
     </div>
 
+    <!-- Floating Action Pill -->
+    <div class="floating-pill">
+        <button id="generate-pdf-btn" class="pill-button primary flex items-center justify-center">
+            <i class="ph-bold ph-download-simple mr-1"></i>
+            <span data-lang-key="download_guide_btn" class="hidden sm:inline">PDF</span>
+        </button>
+        <button id="theme-toggle-btn" class="pill-button">
+            <i id="theme-sun-icon" class="ph-bold ph-sun text-xl"></i>
+            <i id="theme-moon-icon" class="ph-bold ph-moon text-xl"></i>
+        </button>
+        <!-- Language Switcher -->
+        <div class="lang-dropdown">
+            <button id="lang-toggle-btn" class="pill-button">
+                <i class="ph-bold ph-translate text-xl"></i>
+            </button>
+            <div id="lang-dropdown-content" class="lang-dropdown-content">
+                <a href="#" class="lang-switch" data-lang="fr">Français 🇫🇷</a>
+                <a href="#" class="lang-switch" data-lang="en">English 🇬🇧</a>
+                <a href="#" class="lang-switch" data-lang="de">Deutsch 🇩🇪</a>
+            </div>
+        </div>
+    </div>
+
     <!-- Header -->
-    <header class="main-header py-20 md:py-32 text-center">
+    <header class="main-header text-center">
         <div class="container mx-auto px-6">
             <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-4 text-strong" data-lang-key="header_title">Bienvenue à la Villa HoMar</h1>
             <p class="text-lg md:text-xl text-muted max-w-3xl mx-auto" data-lang-key="header_subtitle">Votre guide complet pour un séjour parfait. Retrouvez ici toutes les instructions et informations utiles.</p>
@@ -174,35 +397,12 @@
 
     <!-- Main Content -->
     <main id="main-content" class="container mx-auto px-4 sm:px-6 py-12 md:py-16">
-        
-        <!-- Action Buttons -->
-        <div class="flex items-center justify-center space-x-4 mb-12">
-            <button id="generate-pdf-btn" class="btn-primary font-bold py-3 px-6 rounded-lg shadow-lg flex items-center justify-center">
-                <i class="ph-bold ph-download-simple text-2xl mr-2"></i>
-                <span data-lang-key="download_guide_btn">Télécharger le Guide</span>
-            </button>
-            <button id="theme-toggle-btn" class="btn-secondary p-3 rounded-lg shadow-lg flex items-center justify-center">
-                <i id="theme-sun-icon" class="ph-bold ph-sun text-2xl"></i>
-                <i id="theme-moon-icon" class="ph-bold ph-moon text-2xl"></i>
-            </button>
-            <!-- Language Switcher -->
-            <div class="lang-dropdown">
-                <button class="btn-secondary p-3 rounded-lg shadow-lg flex items-center justify-center">
-                    <i class="ph-bold ph-translate text-2xl"></i>
-                </button>
-                <div class="lang-dropdown-content">
-                    <a href="#" class="lang-switch" data-lang="fr">Français 🇫🇷</a>
-                    <a href="#" class="lang-switch" data-lang="en">English 🇬🇧</a>
-                    <a href="#" class="lang-switch" data-lang="de">Deutsch 🇩🇪</a>
-                </div>
-            </div>
-        </div>
 
         <!-- Grid of instructions -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
 
             <!-- Climatisation -->
-            <div class="card rounded-2xl p-6">
+            <div class="card rounded-3xl p-6">
                 <div class="flex items-center mb-4">
                     <i class="ph-bold ph-snowflake icon text-4xl mr-4"></i>
                     <h2 class="text-2xl font-bold text-strong" data-lang-key="ac_title">Climatisation</h2>
@@ -216,7 +416,7 @@
             </div>
 
             <!-- Alarme Piscine -->
-            <div class="card rounded-2xl p-6">
+            <div class="card rounded-3xl p-6">
                 <div class="flex items-center mb-4">
                     <i class="ph-bold ph-swimming-pool icon text-4xl mr-4"></i>
                     <h2 class="text-2xl font-bold text-strong" data-lang-key="pool_alarm_title">Alarme Piscine</h2>
@@ -228,7 +428,7 @@
             </div>
 
             <!-- Lave-vaisselle -->
-            <div class="card rounded-2xl p-6">
+            <div class="card rounded-3xl p-6">
                 <div class="flex items-center mb-4">
                     <i class="ph-bold ph-plugs icon text-4xl mr-4"></i>
                     <h2 class="text-2xl font-bold text-strong" data-lang-key="dishwasher_title">Lave-vaisselle</h2>
@@ -244,7 +444,7 @@
             </div>
 
             <!-- Barbecue -->
-            <div class="card rounded-2xl p-6">
+            <div class="card rounded-3xl p-6">
                 <div class="flex items-center mb-4">
                     <i class="ph-bold ph-fire icon text-4xl mr-4"></i>
                     <h2 class="text-2xl font-bold text-strong" data-lang-key="bbq_title">Barbecue</h2>
@@ -252,11 +452,11 @@
                 <p class="text-muted" data-lang-key="bbq_text">
                     <span class="font-bold text-red-accent">Ne jamais laisser le feu sans surveillance.</span> Risque d'incendie élevé (clôture inflammable). Vider le barbecue (cendres froides) avant votre départ.
                 </p>
-                <img src="https://www.pompiersdulot.fr/sites/default/files/styles/image_300_300/public/2021-06/37104015351_f5bd0ec41a_o.jpg?itok=pz8Bz5P0" alt="Prévention Feu" class="mt-4 rounded-lg mx-auto w-32" onerror="this.onerror=null;this.src='https://placehold.co/128x128/ff0000/ffffff?text=Image+Feu';">
+                <img src="https://www.pompiersdulot.fr/sites/default/files/styles/image_300_300/public/2021-06/37104015351_f5bd0ec41a_o.jpg?itok=pz8Bz5P0" alt="Prévention Feu" class="mt-4 rounded-2xl mx-auto w-32" onerror="this.onerror=null;this.src='https://placehold.co/128x128/ff0000/ffffff?text=Image+Feu';">
             </div>
 
             <!-- TV & Streaming -->
-            <div class="card rounded-2xl p-6">
+            <div class="card rounded-3xl p-6">
                 <div class="flex items-center mb-4">
                     <i class="ph-bold ph-television-simple icon text-4xl mr-4"></i>
                     <h2 class="text-2xl font-bold text-strong" data-lang-key="tv_title">TV & Streaming</h2>
@@ -264,14 +464,14 @@
                 <p class="text-muted mb-2" data-lang-key="tv_p_1">Via l'app <span class="font-bold">aller sur Molotov TV</span> : allez sur "en direct" (en naviguant vers la gauche), choisissez une chaîne et appuyez <span class="font-bold">deux fois sur OK</span>.</p>
                 <p class="text-muted" data-lang-key="tv_p_2">Pour vos abonnements (Netflix, etc.), touche "maisonnette", sélectionnez l'app et connectez-vous.</p>
                 <p class="mt-3 font-bold text-amber-accent" data-lang-key="tv_p_3"><i class="ph-fill ph-warning-circle inline-block mr-2"></i>N'oubliez pas de vous déconnecter de vos abonnements avant de partir !</p>
-                <img src="https://i.ibb.co/pvyBXxR6/Capture-d-e-cran-2025-07-07-a-17-34-33.png" alt="QR Code pour le WiFi" class="mt-4 rounded-lg bg-white p-2 mx-auto" onerror="this.style.display='none'">
-                <img src="https://i.postimg.cc/PqbZ5gDn/Capture-d-e-cran-2025-07-07-a-17-44-05.png" alt="QR Code pour le WiFi" class="mt-4 rounded-lg bg-white p-2 mx-auto" onerror="this.style.display='none'"> 
+                <img src="https://i.ibb.co/pvyBXxR6/Capture-d-e-cran-2025-07-07-a-17-34-33.png" alt="QR Code pour le WiFi" class="mt-4 rounded-2xl bg-white p-2 mx-auto" onerror="this.style.display='none'">
+                <img src="https://i.postimg.cc/PqbZ5gDn/Capture-d-e-cran-2025-07-07-a-17-44-05.png" alt="QR Code pour le WiFi" class="mt-4 rounded-2xl bg-white p-2 mx-auto" onerror="this.style.display='none'"> 
                 <div class="flex justify-center items-center space-x-4 mt-4">
                 </div>
             </div>
 
             <!-- Connexion WiFi -->
-            <div class="card rounded-2xl p-6">
+            <div class="card rounded-3xl p-6">
                 <div class="flex items-center mb-4">
                     <i class="ph-bold ph-wifi-high icon text-4xl mr-4"></i>
                     <h2 class="text-2xl font-bold text-strong" data-lang-key="wifi_title">Connexion WiFi</h2>
@@ -279,13 +479,13 @@
                 <div class="space-y-2 text-muted">
                     <p><span data-lang-key="wifi_network">Réseau:</span> <span class="font-semibold text-strong">villa-homar</span></p>
                     <p><span data-lang-key="wifi_password">Mot de passe:</span> <span class="font-semibold text-strong">Biscarrosse-40600.</span></p>
-                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=WIFI:T:WPA;S:villa-homar;P:Biscarrosse-40600.;;" alt="QR Code pour le WiFi" class="mt-4 rounded-lg bg-white p-2 mx-auto" onerror="this.onerror=null;this.src='https://placehold.co/150x150/ffffff/000000?text=QR+Code';">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=WIFI:T:WPA;S:villa-homar;P:Biscarrosse-40600.;;" alt="QR Code pour le WiFi" class="mt-4 rounded-2xl bg-white p-2 mx-auto" onerror="this.onerror=null;this.src='https://placehold.co/150x150/ffffff/000000?text=QR+Code';">
                     <p class="mt-2 font-bold text-red-accent" data-lang-key="wifi_warning">Ne jamais débrancher les box internet (indispensables pour la clim, l'arrosage, etc.).</p>
                 </div>
             </div>
 
             <!-- Enceintes -->
-            <div class="card rounded-2xl p-6">
+            <div class="card rounded-3xl p-6">
                 <div class="flex items-center mb-4">
                     <i class="ph-bold ph-speaker-high icon text-4xl mr-4"></i>
                     <h2 class="text-2xl font-bold text-strong" data-lang-key="speakers_title">Enceintes</h2>
@@ -294,7 +494,7 @@
             </div>
 
             <!-- Panneaux Solaires -->
-            <div class="card rounded-2xl p-6">
+            <div class="card rounded-3xl p-6">
                 <div class="flex items-center mb-4">
                     <i class="ph-bold ph-solar-panel icon text-4xl mr-4"></i>
                     <h2 class="text-2xl font-bold text-strong" data-lang-key="solar_panels_title">Panneaux Solaires</h2>
@@ -303,7 +503,7 @@
             </div>
 
             <!-- Activités -->
-            <div class="card rounded-2xl p-6">
+            <div class="card rounded-3xl p-6">
                 <div class="flex items-center mb-4">
                     <i class="ph-bold ph-map-trifold icon text-4xl mr-4"></i>
                     <h2 class="text-2xl font-bold text-strong" data-lang-key="activities_title">Activités</h2>
@@ -314,7 +514,7 @@
             <!-- Accordion Section -->
             <div class="md:col-span-2 lg:col-span-3 space-y-4">
                 <!-- Infos Pratiques Accordion -->
-                <div class="card rounded-2xl">
+                <div class="card rounded-3xl">
                     <button class="accordion-button w-full flex justify-between items-center p-6 text-left">
                         <div class="flex items-center">
                             <i class="ph-bold ph-info icon text-4xl mr-4"></i>
@@ -365,7 +565,7 @@
                 </div>
 
                 <!-- Caution & Départ Accordion -->
-                <div class="card rounded-2xl">
+                <div class="card rounded-3xl">
                     <button class="accordion-button w-full flex justify-between items-center p-6 text-left">
                         <div class="flex items-center">
                             <i class="ph-bold ph-key icon text-4xl mr-4"></i>
@@ -413,7 +613,7 @@
                 loading_pdf: "Génération du PDF en cours...",
                 header_title: "Bienvenue à la Villa HoMar",
                 header_subtitle: "Votre guide complet pour un séjour parfait. Retrouvez ici toutes les instructions et informations utiles.",
-                download_guide_btn: "Télécharger le Guide",
+                download_guide_btn: "PDF",
                 ac_title: "Climatisation",
                 ac_li_1: '<i class="ph-fill ph-arrow-fat-lines-up-down inline-block mr-2 text-cyan-accent"></i>Utilisez les flèches pour régler la température. La température ambiante est en grand au centre, celle désirée en petit en haut à droite.',
                 ac_li_2: '<i class="ph-fill ph-blinds inline-block mr-2 text-cyan-accent"></i>Gardez les volets fermés la journée. La clim refroidira le salon si une chambre est chaude, d\'où l\'intérêt de garder une température homogène.',
@@ -486,149 +686,149 @@
             en: {
                 loading_pdf: "Generating PDF...",
                 header_title: "Welcome to Villa HoMar",
-                header_subtitle: "Your complete guide for a perfect stay. Find all the useful instructions and information here.",
-                download_guide_btn: "Download Guide",
+                header_subtitle: "Your complete rental guide for a perfect stay. Find all the essential instructions and information for your vacation rental here.",
+                download_guide_btn: "PDF",
                 ac_title: "Air Conditioning",
-                ac_li_1: '<i class="ph-fill ph-arrow-fat-lines-up-down inline-block mr-2 text-cyan-accent"></i>Use the arrows to adjust the temperature. The ambient temperature is large in the center, the desired temperature is small in the top right.',
-                ac_li_2: '<i class="ph-fill ph-blinds inline-block mr-2 text-cyan-accent"></i>Keep the shutters closed during the day. The AC will cool the living room if a bedroom is hot, hence the importance of maintaining a consistent temperature.',
-                ac_li_3: '<i class="ph-fill ph-thermometer-cold inline-block mr-2 text-cyan-accent"></i>If it\'s too cold, increase the desired temperature rather than turning it off.',
-                ac_li_4: '<i class="ph-fill ph-warning-circle inline-block mr-2"></i>Do not turn off the marked remote controls and do not touch the other buttons.',
+                ac_li_1: '<i class="ph-fill ph-arrow-fat-lines-up-down inline-block mr-2 text-cyan-accent"></i>Use the arrows to adjust temperature. Current room temperature is displayed large in the center, desired temperature small in the top right.',
+                ac_li_2: '<i class="ph-fill ph-blinds inline-block mr-2 text-cyan-accent"></i>Keep shutters closed during the day. The AC will cool the living room if a bedroom gets hot, so maintaining consistent temperature throughout is important.',
+                ac_li_3: '<i class="ph-fill ph-thermometer-cold inline-block mr-2 text-cyan-accent"></i>If too cold, increase the desired temperature rather than turning the system off.',
+                ac_li_4: '<i class="ph-fill ph-warning-circle inline-block mr-2"></i>Do not turn off the marked remote controls and avoid touching other buttons.',
                 pool_alarm_title: "Pool Alarm",
-                pool_alarm_li_1_strong: "Activation:",
-                pool_alarm_li_1_text: 'Code <span class="font-mono text-lg text-cyan-accent">1-2-3-4</span>. Wait for the slow green flashing for a few minutes.',
-                pool_alarm_li_2_strong: "Deactivation:",
+                pool_alarm_li_1_strong: "To Activate:",
+                pool_alarm_li_1_text: 'Enter code <span class="font-mono text-lg text-cyan-accent">1-2-3-4</span>. Wait for slow green flashing for a few minutes.',
+                pool_alarm_li_2_strong: "To Deactivate:",
                 pool_alarm_li_2_text: 'press the 2nd button and enter <span class="font-mono text-lg text-cyan-accent">3-4-3-4-3-4</span>.',
                 dishwasher_title: "Dishwasher",
-                dishwasher_li_1: "Place the detergent/tablet directly into the first compartment (the one on the left) located in the dishwasher door.",
-                dishwasher_li_2: 'Close the door, press "On/OFF" on the left.',
-                dishwasher_li_3: "Select the program using the arrow (I recommend the 65°C program).",
+                dishwasher_li_1: "Place detergent tablet directly in the first compartment (left side) located in the dishwasher door",
+                dishwasher_li_2: 'Close door, press "On/OFF" on the left.',
+                dishwasher_li_3: "Select program using the arrow (we recommend the 65°C program)",
                 dishwasher_li_4: 'Press "Start" (on the right).',
-                dishwasher_li_5: 'At the end, press "On/OFF" to turn it off.',
-                dishwasher_li_6: '<i class="ph-fill ph-warning-circle inline-block mr-2"></i>Carefully open the dishwasher door to avoid damaging the plastic tab that holds the door.',
+                dishwasher_li_5: 'When finished, press "On/OFF" to turn off.',
+                dishwasher_li_6: '<i class="ph-fill ph-warning-circle inline-block mr-2"></i>Open the dishwasher door carefully to avoid damaging the plastic tab that holds the door.',
                 bbq_title: "Barbecue",
-                bbq_text: '<span class="font-bold text-red-accent">Never leave the fire unattended.</span> High risk of fire (flammable fence). Empty the barbecue (cold ashes) before your departure.',
+                bbq_text: '<span class="font-bold text-red-accent">Never leave fire unattended.</span> High fire risk (flammable fencing). Empty barbecue (cold ashes) before departure.',
                 tv_title: "TV & Streaming",
-                tv_p_1: 'Via the <span class="font-bold">Molotov TV app</span>: go to "live" (by navigating to the left), choose a channel and press <span class="font-bold">OK twice</span>.',
-                tv_p_2: 'For your subscriptions (Netflix, etc.), press the "home" button, select the app, and log in.',
-                tv_p_3: '<i class="ph-fill ph-warning-circle inline-block mr-2"></i>Don\'t forget to log out of your subscriptions before you leave!',
+                tv_p_1: 'Using the <span class="font-bold">Molotov TV app</span>: go to "live TV" (navigate left), choose a channel and press <span class="font-bold">OK twice</span>.',
+                tv_p_2: 'For your streaming subscriptions (Netflix, etc.), press the "home" button, select the app and log in.',
+                tv_p_3: '<i class="ph-fill ph-warning-circle inline-block mr-2"></i>Remember to log out of your streaming accounts before departure!',
                 wifi_title: "WiFi Connection",
                 wifi_network: "Network:",
                 wifi_password: "Password:",
-                wifi_warning: "Never unplug the internet boxes (they are essential for the AC, watering system, etc.).",
+                wifi_warning: "Never unplug the internet boxes (essential for AC, irrigation system, etc.).",
                 speakers_title: "Speakers",
-                speakers_text: 'Press the "On" button on the speakers and subwoofer. Select "FM" for the radio. Don\'t forget to turn them off after use.',
+                speakers_text: 'Press the "On" button on speakers and subwoofer. Select "FM" for radio. Remember to turn off after use.',
                 solar_panels_title: "Solar Panels",
-                solar_panels_text: 'Take advantage of the daytime to run the washing machine and dishwasher. When the real-time consumption screen shows <span class="font-mono text-lg text-cyan-accent">0</span>, solar power takes over!',
+                solar_panels_text: 'Take advantage of daytime to run washing machine and dishwasher. When the real-time consumption display shows <span class="font-mono text-lg text-cyan-accent">0</span>, solar power takes over!',
                 activities_title: "Activities",
-                activities_text: 'For activities, you can visit the tourist office website <a href="https://www.biscagrandslacs.com/agenda-des-manifestations" target="_blank" rel="noopener noreferrer" class="font-bold text-blue-link hover:underline">at this address</a>.',
-                practical_info_title: "Practical Info & Recommendations",
-                bins_title: "Trash Bins",
-                bins_text_1: "Take out the containers on MONDAY and THURSDAY mornings.",
-                bins_text_2: "Recycling point (glass, cardboard, plastic): 700m away, on rue Georges Pompidou.",
+                activities_text: 'For local activities, visit the tourist office website <a href="https://www.biscagrandslacs.com/agenda-des-manifestations" target="_blank" rel="noopener noreferrer" class="font-bold text-blue-link hover:underline">at this address</a>.',
+                practical_info_title: "Practical Information & Guidelines",
+                bins_title: "Trash Collection",
+                bins_text_1: "Put containers out on MONDAY and THURSDAY mornings.",
+                bins_text_2: "Recycling point (glass, cardboard, plastic): 700m away, rue Georges Pompidou.",
                 markets_title: "Local Markets",
                 markets_li_1: "Biscarrosse Town: Friday morning & Sunday morning.",
-                markets_li_2: "Biscarrosse Beach: Every morning & night markets.",
+                markets_li_2: "Biscarrosse Beach: Every morning & evening markets.",
                 markets_li_3: "Parentis-en-Born: Thursday morning.",
                 parking_title: "Parking",
-                parking_li_1: "Free in the town (except in specific zones).",
-                parking_li_2: "Paid: Around the lake and Viviers beach.",
-                parking_li_3: "Blue zones: 1.5 hours with a parking disc or write your arrival time on a piece of paper and place it visibly on your dashboard.",
-                noise_title: "Noise Regulations",
-                noise_p_1: "You are staying in a residential area. Just like at home, here are the time slots to respect for making \"noise\", so please be quieter during other times:",
+                parking_li_1: "Free in town (except specific zones).",
+                parking_li_2: "Paid parking: Lake area and Viviers beach.",
+                parking_li_3: "Blue zones: 1.5 hours with parking disc or write arrival time on paper and place visibly on dashboard.",
+                noise_title: "Noise Guidelines",
+                noise_p_1: "You're staying in a residential area. Like at home, here are the time slots for activities that may create noise - please be quieter during other hours:",
                 noise_li_1: "Mon-Fri: 8am-12pm and 2pm-7:30pm",
                 noise_li_2: "Saturday: 9am-12pm and 3pm-7pm",
                 noise_li_3: "Sunday & holidays: 10am-12pm",
                 pool_maintenance_title: "Pool & Maintenance",
-                pool_maintenance_text: 'Remember to rinse your feet before swimming. Sébastien takes care of the pool very early every morning with discretion; he has a beeper to enter. If the water becomes cloudy or green, contact him at <span class="font-semibold text-strong">06 68 02 64 83</span>.',
-                departure_title: "Departure & Deposit",
-                departure_p_1: "A cleaning deposit of €200 was given to Elodie. For its full return, please adhere to the following checklist:",
+                pool_maintenance_text: 'Please rinse your feet before swimming. Sébastien maintains the pool very early each morning discreetly; he has access. If water becomes cloudy or green, contact him at <span class="font-semibold text-strong">06 68 02 64 83</span>.',
+                departure_title: "Departure & Security Deposit",
+                departure_p_1: "A €200 cleaning deposit was given to Elodie. For full refund, please follow this checkout checklist:",
                 departure_li_1: "Bedding and sofa without stains/odors",
                 departure_li_2: "Floors vacuumed",
-                departure_li_3: "Floor washed",
-                departure_li_4: "Mirrors and windows without streaks",
+                departure_li_3: "Floors mopped",
+                departure_li_4: "Mirrors and windows streak-free",
                 departure_li_5: "Cooking appliances clean",
                 departure_li_6: "Dishwasher emptied and clean",
-                departure_li_7: "Toilets and drains clean",
-                departure_li_8: "Fridge and freezer clean",
-                departure_li_9: "Terrace swept (and washed if necessary)",
+                departure_li_7: "Bathrooms and drains clean",
+                departure_li_8: "Refrigerator and freezer clean",
+                departure_li_9: "Terrace swept (and mopped if needed)",
                 departure_li_10: "Barbecue emptied and cleaned",
-                departure_li_11: "Inside of furniture free of sand/hair",
+                departure_li_11: "Furniture interiors free of sand/hair",
                 departure_li_12: "All trash bins emptied",
-                departure_p_2: "In case of lost keys or beeper, a replacement quote will be sent via the booking platform.",
+                departure_p_2: "If keys or access remote are lost, replacement costs will be charged through the booking platform.",
                 footer_text: "We wish you an excellent stay at Villa HoMar!"
             },
             de: {
                 loading_pdf: "PDF wird erstellt...",
                 header_title: "Willkommen in der Villa HoMar",
-                header_subtitle: "Ihr vollständiger Leitfaden für einen perfekten Aufenthalt. Hier finden Sie alle nützlichen Anweisungen und Informationen.",
-                download_guide_btn: "Leitfaden herunterladen",
+                header_subtitle: "Ihr vollständiger Mietleitfaden für einen perfekten Aufenthalt. Hier finden Sie alle wichtigen Anweisungen und Informationen für Ihre Ferienwohnung.",
+                download_guide_btn: "PDF",
                 ac_title: "Klimaanlage",
-                ac_li_1: '<i class="ph-fill ph-arrow-fat-lines-up-down inline-block mr-2 text-cyan-accent"></i>Verwenden Sie die Pfeile, um die Temperatur einzustellen. Die Raumtemperatur wird groß in der Mitte angezeigt, die gewünschte Temperatur klein oben rechts.',
-                ac_li_2: '<i class="ph-fill ph-blinds inline-block mr-2 text-cyan-accent"></i>Halten Sie die Rollläden tagsüber geschlossen. Die Klimaanlage kühlt das Wohnzimmer, wenn ein Schlafzimmer heiß ist, daher ist es wichtig, eine gleichmäßige Temperatur beizubehalten.',
-                ac_li_3: '<i class="ph-fill ph-thermometer-cold inline-block mr-2 text-cyan-accent"></i>Wenn es zu kalt ist, erhöhen Sie die gewünschte Temperatur, anstatt sie auszuschalten.',
-                ac_li_4: '<i class="ph-fill ph-warning-circle inline-block mr-2"></i>Schalten Sie die gekennzeichneten Fernbedienungen nicht aus und berühren Sie nicht die anderen Tasten.',
+                ac_li_1: '<i class="ph-fill ph-arrow-fat-lines-up-down inline-block mr-2 text-cyan-accent"></i>Verwenden Sie die Pfeile zur Temperatureinstellung. Aktuelle Raumtemperatur wird groß in der Mitte angezeigt, gewünschte Temperatur klein oben rechts.',
+                ac_li_2: '<i class="ph-fill ph-blinds inline-block mr-2 text-cyan-accent"></i>Rollläden tagsüber geschlossen halten. Die Klimaanlage kühlt das Wohnzimmer wenn ein Schlafzimmer heiß wird, daher ist gleichmäßige Temperatur wichtig.',
+                ac_li_3: '<i class="ph-fill ph-thermometer-cold inline-block mr-2 text-cyan-accent"></i>Bei zu kalter Temperatur die gewünschte Temperatur erhöhen statt das System auszuschalten.',
+                ac_li_4: '<i class="ph-fill ph-warning-circle inline-block mr-2"></i>Markierte Fernbedienungen nicht ausschalten und andere Tasten nicht berühren.',
                 pool_alarm_title: "Pool-Alarm",
                 pool_alarm_li_1_strong: "Aktivierung:",
-                pool_alarm_li_1_text: 'Code <span class="font-mono text-lg text-cyan-accent">1-2-3-4</span>. Warten Sie einige Minuten auf das langsame grüne Blinken.',
+                pool_alarm_li_1_text: 'Code eingeben <span class="font-mono text-lg text-cyan-accent">1-2-3-4</span>. Einige Minuten auf langsames grünes Blinken warten.',
                 pool_alarm_li_2_strong: "Deaktivierung:",
-                pool_alarm_li_2_text: 'Drücken Sie die 2. Taste und geben Sie <span class="font-mono text-lg text-cyan-accent">3-4-3-4-3-4</span> ein.',
+                pool_alarm_li_2_text: '2. Taste drücken und <span class="font-mono text-lg text-cyan-accent">3-4-3-4-3-4</span> eingeben.',
                 dishwasher_title: "Geschirrspüler",
-                dishwasher_li_1: "Geben Sie das Spülmittel/die Tablette direkt in das erste Fach (das linke) in der Tür des Geschirrspülers.",
-                dishwasher_li_2: 'Schließen Sie die Tür, drücken Sie links auf "On/OFF".',
-                dishwasher_li_3: "Wählen Sie das Programm mit dem Pfeil aus (ich empfehle das 65°C-Programm).",
-                dishwasher_li_4: 'Drücken Sie auf "Start" (rechts).',
-                dishwasher_li_5: 'Am Ende drücken Sie auf "On/OFF", um ihn auszuschalten.',
-                dishwasher_li_6: '<i class="ph-fill ph-warning-circle inline-block mr-2"></i>Öffnen Sie die Geschirrspülertür vorsichtig, um die Plastiklasche, die die Tür hält, nicht zu beschädigen.',
+                dishwasher_li_1: "Spülmittel-Tablette direkt in das erste Fach (links) in der Geschirrspülertür geben",
+                dishwasher_li_2: 'Tür schließen, links "On/OFF" drücken.',
+                dishwasher_li_3: "Programm mit Pfeil auswählen (wir empfehlen das 65°C-Programm)",
+                dishwasher_li_4: '"Start" drücken (rechts).',
+                dishwasher_li_5: 'Nach Ende "On/OFF" zum Ausschalten drücken.',
+                dishwasher_li_6: '<i class="ph-fill ph-warning-circle inline-block mr-2"></i>Geschirrspülertür vorsichtig öffnen um die Plastiklasche nicht zu beschädigen.',
                 bbq_title: "Grill",
-                bbq_text: '<span class="font-bold text-red-accent">Lassen Sie das Feuer niemals unbeaufsichtigt.</span> Hohe Brandgefahr (brennbarer Zaun). Leeren Sie den Grill (kalte Asche) vor Ihrer Abreise.',
+                bbq_text: '<span class="font-bold text-red-accent">Feuer niemals unbeaufsichtigt lassen.</span> Hohe Brandgefahr (brennbarer Zaun). Grill vor Abreise leeren (kalte Asche).',
                 tv_title: "Fernseher & Streaming",
-                tv_p_1: 'Über die <span class="font-bold">Molotov TV App</span>: Gehen Sie zu "Live" (navigieren Sie nach links), wählen Sie einen Sender und drücken Sie <span class="font-bold">zweimal OK</span>.',
-                tv_p_2: 'Für Ihre Abonnements (Netflix usw.), drücken Sie die "Home"-Taste, wählen Sie die App aus und melden Sie sich an.',
-                tv_p_3: '<i class="ph-fill ph-warning-circle inline-block mr-2"></i>Vergessen Sie nicht, sich vor Ihrer Abreise von Ihren Abonnements abzumelden!',
+                tv_p_1: 'Mit der <span class="font-bold">Molotov TV App</span>: zu "Live TV" gehen (nach links navigieren), Sender wählen und <span class="font-bold">zweimal OK</span> drücken.',
+                tv_p_2: 'Für Ihre Streaming-Abos (Netflix, etc.), "Home"-Taste drücken, App auswählen und anmelden.',
+                tv_p_3: '<i class="ph-fill ph-warning-circle inline-block mr-2"></i>Vergessen Sie nicht, sich vor Abreise von Ihren Streaming-Konten abzumelden!',
                 wifi_title: "WLAN-Verbindung",
                 wifi_network: "Netzwerk:",
                 wifi_password: "Passwort:",
-                wifi_warning: "Ziehen Sie niemals den Stecker der Internet-Boxen (unverzichtbar für Klimaanlage, Bewässerung usw.).",
+                wifi_warning: "Internet-Boxen niemals ausstecken (wichtig für Klimaanlage, Bewässerung, etc.).",
                 speakers_title: "Lautsprecher",
-                speakers_text: 'Drücken Sie die "Ein"-Taste an den Lautsprechern und am Subwoofer. Wählen Sie "FM" für das Radio. Vergessen Sie nicht, sie nach Gebrauch auszuschalten.',
-                solar_panels_title: "Sonnenkollektoren",
-                solar_panels_text: 'Nutzen Sie den Tag, um Waschmaschine und Geschirrspüler laufen zu lassen. Wenn der Echtzeit-Verbrauchsbildschirm <span class="font-mono text-lg text-cyan-accent">0</span> anzeigt, übernimmt die Solarenergie!',
+                speakers_text: '"Ein"-Taste an Lautsprechern und Subwoofer drücken. "FM" für Radio wählen. Nach Gebrauch ausschalten nicht vergessen.',
+                solar_panels_title: "Solarpanels",
+                solar_panels_text: 'Nutzen Sie den Tag für Waschmaschine und Geschirrspüler. Wenn die Echtzeit-Verbrauchsanzeige <span class="font-mono text-lg text-cyan-accent">0</span> zeigt, übernimmt Solarstrom!',
                 activities_title: "Aktivitäten",
-                activities_text: 'Für Aktivitäten können Sie die Website des Tourismusbüros <a href="https://www.biscagrandslacs.com/agenda-des-manifestations" target="_blank" rel="noopener noreferrer" class="font-bold text-blue-link hover:underline">unter dieser Adresse</a> besuchen.',
-                practical_info_title: "Praktische Infos & Empfehlungen",
-                bins_title: "Mülltonnen",
-                bins_text_1: "Stellen Sie die Container MONTAGS und DONNERSTAGS morgens raus.",
-                bins_text_2: "Wertstoffhof (Glas, Pappe, Plastik): 700m entfernt, in der Rue Georges Pompidou.",
+                activities_text: 'Für lokale Aktivitäten besuchen Sie die Tourismusbüro-Website <a href="https://www.biscagrandslacs.com/agenda-des-manifestations" target="_blank" rel="noopener noreferrer" class="font-bold text-blue-link hover:underline">unter dieser Adresse</a>.',
+                practical_info_title: "Praktische Informationen & Richtlinien",
+                bins_title: "Müllabholung",
+                bins_text_1: "Container MONTAGS und DONNERSTAGS morgens rausstellen.",
+                bins_text_2: "Wertstoffhof (Glas, Pappe, Plastik): 700m entfernt, rue Georges Pompidou.",
                 markets_title: "Lokale Märkte",
                 markets_li_1: "Biscarrosse Stadt: Freitagmorgen & Sonntagmorgen.",
-                markets_li_2: "Biscarrosse Strand: Jeden Morgen & Nachtmärkte.",
+                markets_li_2: "Biscarrosse Strand: Jeden Morgen & Abendmärkte.",
                 markets_li_3: "Parentis-en-Born: Donnerstagmorgen.",
                 parking_title: "Parken",
-                parking_li_1: "Kostenlos in der Stadt (außer in speziellen Zonen).",
-                parking_li_2: "Gebührenpflichtig: Rund um den See und am Strand von Viviers.",
-                parking_li_3: "Blaue Zonen: 1,5 Stunden mit einer Parkscheibe oder notieren Sie Ihre Ankunftszeit auf einem Zettel und legen Sie ihn sichtbar auf Ihr Armaturenbrett.",
-                noise_title: "Ruhezeiten",
-                noise_p_1: "Sie wohnen in einem Wohngebiet. Genau wie zu Hause sind hier die Zeitfenster, die für \"Lärm\" zu respektieren sind, also denken Sie daran, zu anderen Zeiten leiser zu sein:",
+                parking_li_1: "Kostenlos in der Stadt (außer spezielle Zonen).",
+                parking_li_2: "Gebührenpflichtig: Seebereich und Viviers Strand.",
+                parking_li_3: "Blaue Zonen: 1,5 Stunden mit Parkscheibe oder Ankunftszeit auf Zettel schreiben und sichtbar aufs Armaturenbrett legen.",
+                noise_title: "Lärmrichtlinien",
+                noise_p_1: "Sie wohnen in einem Wohngebiet. Wie zu Hause gibt es Zeiten für Aktivitäten die Lärm verursachen können - bitte seien Sie zu anderen Zeiten leiser:",
                 noise_li_1: "Mo-Fr: 8-12 Uhr und 14-19:30 Uhr",
                 noise_li_2: "Samstag: 9-12 Uhr und 15-19 Uhr",
                 noise_li_3: "Sonntag & Feiertage: 10-12 Uhr",
                 pool_maintenance_title: "Pool & Wartung",
-                pool_maintenance_text: 'Denken Sie daran, Ihre Füße abzuspülen, bevor Sie schwimmen. Sébastien kümmert sich jeden Morgen sehr früh und diskret um den Pool; er hat einen Beeper, um einzutreten. Wenn das Wasser trüb oder grün wird, kontaktieren Sie ihn unter <span class="font-semibold text-strong">06 68 02 64 83</span>.',
+                pool_maintenance_text: 'Bitte Füße vor dem Schwimmen abspülen. Sébastien pflegt den Pool jeden Morgen sehr früh und diskret; er hat Zugang. Bei trübem oder grünem Wasser kontaktieren Sie ihn unter <span class="font-semibold text-strong">06 68 02 64 83</span>.',
                 departure_title: "Abreise & Kaution",
-                departure_p_1: "Eine Reinigungskaution von 200€ wurde an Elodie übergeben. Für die vollständige Rückerstattung bitten wir Sie, die folgende Checkliste einzuhalten:",
-                departure_li_1: "Bettwäsche und Sofa ohne Flecken/Geruch",
-                departure_li_2: "Boden gesaugt",
-                departure_li_3: "Boden gewischt",
-                departure_li_4: "Spiegel und Fenster ohne Schlieren",
+                departure_p_1: "Eine Reinigungskaution von 200€ wurde an Elodie übergeben. Für vollständige Rückerstattung befolgen Sie bitte diese Abreise-Checkliste:",
+                departure_li_1: "Bettwäsche und Sofa ohne Flecken/Gerüche",
+                departure_li_2: "Böden gesaugt",
+                departure_li_3: "Böden gewischt",
+                departure_li_4: "Spiegel und Fenster streifenfrei",
                 departure_li_5: "Kochgeräte sauber",
                 departure_li_6: "Geschirrspüler geleert und sauber",
-                departure_li_7: "Sanitäranlagen und Siphons sauber",
+                departure_li_7: "Badezimmer und Abflüsse sauber",
                 departure_li_8: "Kühlschrank und Gefrierschrank sauber",
-                departure_li_9: "Terrasse gefegt (und bei Bedarf gewischt)",
+                departure_li_9: "Terrasse gefegt (und gewischt falls nötig)",
                 departure_li_10: "Grill geleert und gereinigt",
-                departure_li_11: "Innere der Möbel ohne Sand/Haare",
+                departure_li_11: "Möbel-Innenseiten frei von Sand/Haaren",
                 departure_li_12: "Alle Mülleimer geleert",
-                departure_p_2: "Bei Verlust von Schlüsseln oder Beeper wird ein Ersatzangebot über die Buchungsplattform gesendet.",
+                departure_p_2: "Bei Verlust von Schlüsseln oder Zugangsfernbedienung werden Ersatzkosten über die Buchungsplattform berechnet.",
                 footer_text: "Wir wünschen Ihnen einen ausgezeichneten Aufenthalt in der Villa HoMar!"
             }
         };
@@ -650,7 +850,25 @@
                 event.preventDefault();
                 const lang = button.getAttribute('data-lang');
                 setLanguage(lang);
+                // Close dropdown after selection
+                document.getElementById('lang-dropdown-content').classList.remove('show');
             });
+        });
+
+        // Improved Language Dropdown Logic
+        const langToggleBtn = document.getElementById('lang-toggle-btn');
+        const langDropdownContent = document.getElementById('lang-dropdown-content');
+
+        langToggleBtn.addEventListener('click', (event) => {
+            event.stopPropagation();
+            langDropdownContent.classList.toggle('show');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (event) => {
+            if (!langToggleBtn.contains(event.target) && !langDropdownContent.contains(event.target)) {
+                langDropdownContent.classList.remove('show');
+            }
         });
 
         // Check for saved language in localStorage
@@ -716,10 +934,10 @@
             const { jsPDF } = window.jspdf;
             const content = document.getElementById('main-content');
             const loadingOverlay = document.getElementById('loading-overlay');
-            const actionButtons = document.querySelector('.flex.items-center.justify-center.space-x-4');
+            const floatingPill = document.querySelector('.floating-pill');
             
             loadingOverlay.style.display = 'flex';
-            actionButtons.style.visibility = 'hidden';
+            floatingPill.style.visibility = 'hidden';
 
             const accordions = document.querySelectorAll('.accordion-button');
             const wereOpen = [];
@@ -737,7 +955,7 @@
                     backgroundColor: isLightTheme ? '#f3f4f6' : '#0a0a0a',
                     useCORS: true 
                 }).then(canvas => {
-                    actionButtons.style.visibility = 'visible';
+                    floatingPill.style.visibility = 'visible';
                     loadingOverlay.style.display = 'none';
 
                     accordions.forEach((button, index) => {
@@ -770,7 +988,7 @@
                     pdf.save('Guide-Villa-HoMar.pdf');
                 }).catch(err => {
                     loadingOverlay.style.display = 'none';
-                    actionButtons.style.visibility = 'visible';
+                    floatingPill.style.visibility = 'visible';
                     console.error("Erreur lors de la génération du PDF:", err);
                 });
             }, 600); // Increased delay for accordion animation
